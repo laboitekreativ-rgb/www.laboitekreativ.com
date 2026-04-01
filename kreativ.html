@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kreativ — Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #0a0a0a;
+    --white: #f5f2ec;
+    --accent: #e8d44d;
+    --gray: #1c1c1c;
+    --muted: #888;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    cursor: none;
+    overflow-x: hidden;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed;
+    width: 12px; height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, width 0.3s, height 0.3s;
+    mix-blend-mode: difference;
+  }
+  .cursor.grow { width: 48px; height: 48px; }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 3rem;
+    mix-blend-mode: difference;
+  }
+
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 0.08em;
+    color: var(--white);
+    text-decoration: none;
+  }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 2.5rem;
+  }
+
+  nav a {
+    color: var(--white);
+    text-decoration: none;
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.6;
+    transition: opacity 0.3s;
+  }
+
+  nav a:hover { opacity: 1; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600&q=80') center/cover no-repeat;
+    opacity: 0.25;
+    transform: scale(1.05);
+    animation: subtle-zoom 20s ease-in-out infinite alternate;
+  }
+
+  @keyframes subtle-zoom {
+    from { transform: scale(1.05); }
+    to { transform: scale(1.12); }
+  }
+
+  .hero-content { position: relative; z-index: 2; }
+
+  .hero-tag {
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fade-up 0.8s 0.3s forwards;
+  }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(5rem, 14vw, 13rem);
+    line-height: 0.9;
+    letter-spacing: -0.01em;
+    opacity: 0;
+    animation: fade-up 0.8s 0.5s forwards;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    font-size: 0.45em;
+    color: var(--accent);
+    display: block;
+    letter-spacing: 0.01em;
+  }
+
+  .hero-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 2rem;
+    opacity: 0;
+    animation: fade-up 0.8s 0.8s forwards;
+  }
+
+  .hero-desc {
+    max-width: 320px;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: rgba(245,242,236,0.6);
+  }
+
+  .scroll-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.4;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 60px;
+    background: var(--white);
+    transform-origin: top;
+    animation: scroll-anim 2s ease-in-out infinite;
+  }
+
+  @keyframes scroll-anim {
+    0% { transform: scaleY(0); opacity: 0; }
+    50% { transform: scaleY(1); opacity: 1; }
+    100% { transform: scaleY(0); opacity: 0; transform-origin: bottom; }
+  }
+
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* STATS BAR */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .stat-item {
+    padding: 2.5rem 3rem;
+    border-right: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .stat-item:last-child { border-right: none; }
+
+  .stat-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3.5rem;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 0.4rem;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* FILTER */
+  .filter-bar {
+    padding: 2.5rem 3rem 1rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    background: none;
+    border: 1px solid rgba(255,255,255,0.15);
+    color: var(--white);
+    padding: 0.5rem 1.4rem;
+    border-radius: 999px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: none;
+    transition: all 0.3s;
+    opacity: 0.6;
+  }
+
+  .filter-btn:hover, .filter-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--black);
+    opacity: 1;
+  }
+
+  /* PROJECTS GRID */
+  .projects {
+    padding: 1rem 3rem 6rem;
+    columns: 2;
+    column-gap: 1.5rem;
+  }
+
+  .project-card {
+    break-inside: avoid;
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    border-radius: 4px;
+    display: block;
+    cursor: none;
+  }
+
+  .project-card img {
+    width: 100%;
+    display: block;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    filter: grayscale(30%);
+  }
+
+  .project-card:hover img {
+    transform: scale(1.06);
+    filter: grayscale(0%);
+  }
+
+  .project-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(10,10,10,0.9) 0%, transparent 55%);
+    opacity: 0;
+    transition: opacity 0.4s;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 1.8rem;
+  }
+
+  .project-card:hover .project-overlay { opacity: 1; }
+
+  .project-cat {
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.4rem;
+  }
+
+  .project-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 0.05em;
+    line-height: 1;
+  }
+
+  .project-sub {
+    font-size: 0.8rem;
+    color: rgba(245,242,236,0.6);
+    margin-top: 0.4rem;
+  }
+
+  .project-num {
+    position: absolute;
+    top: 1.2rem;
+    right: 1.2rem;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 0.1em;
+  }
+
+  /* SOUND SECTION */
+  .sound-section {
+    padding: 6rem 3rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .sound-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+  }
+
+  .sound-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 6vw, 5rem);
+    line-height: 0.95;
+    margin-bottom: 1.5rem;
+  }
+
+  .sound-desc {
+    color: rgba(245,242,236,0.55);
+    line-height: 1.8;
+    font-size: 0.95rem;
+    max-width: 420px;
+  }
+
+  .sound-player {
+    background: var(--gray);
+    border-radius: 8px;
+    padding: 2rem;
+  }
+
+  .track {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    cursor: none;
+    transition: opacity 0.3s;
+  }
+
+  .track:last-child { border-bottom: none; }
+  .track:hover { opacity: 0.7; }
+
+  .play-btn {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.3s;
+    border: none;
+    cursor: none;
+  }
+
+  .track:hover .play-btn { background: var(--accent); }
+
+  .play-btn svg { width: 12px; height: 12px; fill: var(--white); }
+  .track:hover .play-btn svg { fill: var(--black); }
+
+  .track-info { flex: 1; }
+
+  .track-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 0.2rem;
+  }
+
+  .track-client {
+    font-size: 0.75rem;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .track-dur {
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .waveform {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    height: 24px;
+  }
+
+  .waveform span {
+    display: block;
+    width: 2px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 1px;
+    animation: wave-idle 2s ease-in-out infinite;
+  }
+
+  .track:hover .waveform span { background: var(--accent); }
+
+  @keyframes wave-idle {
+    0%, 100% { height: 4px; }
+    50% { height: var(--h); }
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 3rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 0.1em;
+    opacity: 0.4;
+  }
+
+  .footer-copy {
+    font-size: 0.75rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+
+  .footer-cta {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.9rem;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    text-decoration: none;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--accent);
+    padding-bottom: 2px;
+    transition: opacity 0.3s;
+  }
+
+  .footer-cta:hover { opacity: 0.6; }
+
+  /* LIGHTBOX */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.92);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s;
+  }
+
+  .lightbox.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .lightbox img {
+    max-width: 85vw;
+    max-height: 85vh;
+    object-fit: contain;
+    border-radius: 4px;
+    transform: scale(0.95);
+    transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+  }
+
+  .lightbox.open img { transform: scale(1); }
+
+  .lb-close {
+    position: absolute;
+    top: 2rem; right: 2.5rem;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.4);
+    cursor: none;
+    transition: color 0.3s;
+  }
+
+  .lb-close:hover { color: var(--white); }
+
+  .lb-info {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+  }
+
+  .lb-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.3rem;
+  }
+
+  .lb-cat {
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 1.2rem 1.5rem; }
+    nav ul { display: none; }
+    .hero, .filter-bar { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .projects { columns: 1; padding: 1rem 1.5rem 4rem; }
+    .stats { grid-template-columns: 1fr; }
+    .stat-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); padding: 1.5rem; }
+    .sound-section { grid-template-columns: 1fr; padding: 3rem 1.5rem; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; padding: 2rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+
+<nav>
+  <a href="https://laboitekreativ-rgb.github.io/www.laboitekreativ.com/#hero" class="logo">Kreativ</a>
+  <ul>
+    <li><a href="#projets">Projets</a></li>
+    <li><a href="https://laboitekreativ-rgb.github.io/www.laboitekreativ.com/#hero">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <p class="hero-tag">LA BOITE KREATIV — Abidjan, CI</p>
+    <h1>Kreativ<em>— Nos Projects.</em></h1>
+    <div class="hero-bottom">
+      <p class="hero-desc">Branding, direction artistique. Nous transformons les idées en expériences qui marquent les esprits.</p>
+      <div class="scroll-indicator">
+        <div class="scroll-line"></div>
+        <span>Scroll</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats">
+  <div class="stat-item">
+    <div class="stat-number">87+</div>
+    <div class="stat-label">Projets livrés</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number">14</div>
+    <div class="stat-label">Pays couverts</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number">+05</div>
+    <div class="stat-label">Années d'expérience</div>
+  </div>
+</section>
+
+<!-- FILTER -->
+<div class="filter-bar" id="projets">
+  <button class="filter-btn active" data-filter="all">Tous</button>
+
+</div>
+
+<!-- PROJECTS -->
+<div class="projects" id="grid">
+
+  <div class="project-card" data-cat="branding"
+    data-title="NATIVA STUDIO" data-sub="NATIVA STUDIO"
+    onclick="openLb(this)">
+    <span class="project-num">01</span>
+    <img src="images/FLYER NATIVA STUDIO.png" alt="NATIVA STUDIO">
+    <div class="project-overlay">
+      <div class="project-cat">FLYER</div>
+      <div class="project-title">NATIVA STUDIO</div>
+      <div class="project-sub">FLYER NATIVA STUDIO</div>
+    </div>
+  </div>
+
+  <div class="project-card" data-cat="photo"
+    data-title="MJSA à L'Impérial" data-sub="MJSA à L'Impérial"
+    onclick="openLb(this)">
+    <span class="project-num">02</span>
+    <img src="images/30 ans du MJSA à L'Impérial.jpg (1).jpeg" alt="30 ans du MJSA à L'Impérial" style="height:360px;object-fit:cover;">
+    <div class="project-overlay">
+      <div class="project-cat">MJSA à L'Impérial</div>
+      <div class="project-title">MJSA à L'Impérial</div>
+      <div class="project-sub">30 ans du MJSA à L'Impérial</div>
+    </div>
+  </div>
+
+  <div class="project-card" data-cat="digital"
+    data-title="SAINT AMBROISE DU JUBILÉ" data-sub="SAINT AMBROISE DU JUBILÉ"
+    onclick="openLb(this)">
+    <span class="project-num">03</span>
+    <img src="images/MAQUETTE POLO SAINT AMBROISE DU JUBILÉ.png" alt="MAQUETTE POLO SAINT AMBROISE DU JUBILÉ" style="height:260px;object-fit:cover;">
+    <div class="project-overlay">
+      <div class="project-cat">MAQUETTE POLO </div>
+      <div class="project-title">SAINT AMBROISE DU JUBILÉ</div>
+      <div class="project-sub">MAQUETTE POLO SAINT AMBROISE DU JUBILÉ</div>
+    </div>
+  </div>
+
+  <div class="project-card" data-cat="evenement"
+    data-title="SCOUT" data-sub="SCOUT"
+    onclick="openLb(this)">
+    <span class="project-num">04</span>
+    <img src="images/MAQUETTE SCOUT.png" alt="MAQUETTE SCOUT">
+    <div class="project-overlay">
+      <div class="project-cat">MAQUETTE SCOUT</div>
+      <div class="project-title">SCOUT</div>
+      <div class="project-sub">MAQUETTE SCOUT</div>
+    </div>
+  </div>
+
+  <div class="project-card" data-cat="photo"
+    data-title="Portraits Urbains" data-sub="Série documentaire"
+    onclick="openLb(this)">
+    <span class="project-num">06</span>
+    <img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=800&q=80" alt="Portraits Urbains" style="height:280px;object-fit:cover;">
+    <div class="project-overlay">
+      <div class="project-cat">Photographie</div>
+      <div class="project-title">Portraits Urbains</div>
+      <div class="project-sub">Série documentaire</div>
+    </div>
+  </div>
+
+  <div class="project-card" data-cat="digital"
+    data-title="P5" data-sub="P5"
+    onclick="openLb(this)">
+    <span class="project-num">07</span>
+    <img src="images/P5.jpg.jpeg" alt="P5" style="height:240px;object-fit:cover;">
+    <div class="project-overlay">
+      <div class="project-cat">P5</div>
+      <div class="project-title">P5</div>
+      <div class="project-sub">P5</div>
+    </div>
+  </div>
+
+  <div class="project-card" data-cat="evenement"
+    data-title="P3" data-sub="P3"
+    onclick="openLb(this)">
+    <span class="project-num">08</span>
+    <img src="images/P3.jpg.jpeg" alt="P3">
+    <div class="project-overlay">
+      <div class="project-cat">P3</div>
+      <div class="project-title">P3</div>
+      <div class="project-sub">P3</div>
+    </div>
+  </div>
+
+</div>
+
+
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Kreativ</div>
+  <div class="footer-copy">© 2025 Kreativ Studio — Abidjan, Côte d'Ivoire</div>
+  <a href="mailto:hello@kreativ.studio" class="footer-cta">Nous contacter →</a>
+</footer>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLb()">
+  <div class="lb-close">✕ Fermer</div>
+  <img id="lb-img" src="" alt="">
+  <div class="lb-info">
+    <div class="lb-title" id="lb-title"></div>
+    <div class="lb-cat" id="lb-cat"></div>
+  </div>
+</div>
+
+<script>
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+  });
+  document.querySelectorAll('a, button, .project-card, .track, .filter-btn').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('grow'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('grow'));
+  });
+
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const f = btn.dataset.filter;
+      document.querySelectorAll('.project-card').forEach(card => {
+        if (f === 'all' || card.dataset.cat === f) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  });
+
+  function openLb(card) {
+    const lb = document.getElementById('lightbox');
+    document.getElementById('lb-img').src = card.querySelector('img').src;
+    document.getElementById('lb-title').textContent = card.dataset.title;
+    document.getElementById('lb-cat').textContent = card.dataset.sub;
+    lb.classList.add('open');
+  }
+
+  function closeLb() {
+    document.getElementById('lightbox').classList.remove('open');
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLb(); });
+
+  function playTrack(track) {
+    document.querySelectorAll('.track').forEach(t => t.style.opacity = '0.5');
+    track.style.opacity = '1';
+    const svg = track.querySelector('polygon');
+    svg.setAttribute('points', '2,2 5,2 5,10 2,10 M7,2 10,2 10,10 7,10');
+    setTimeout(() => {
+      svg.setAttribute('points', '2,1 11,6 2,11');
+      document.querySelectorAll('.track').forEach(t => t.style.opacity = '1');
+    }, 3000);
+  }
+</script>
+</body>
+</html>
